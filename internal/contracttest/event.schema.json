@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.faultsline.dev/schemas/ingest-batch-go.json",
+  "title": "Faultline ingest batch (CONTRACTS.md sections 2 and 7, platform go)",
+  "type": "object",
+  "required": ["events"],
+  "additionalProperties": false,
+  "properties": {
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": { "$ref": "#/$defs/event" }
+    }
+  },
+  "$defs": {
+    "level": { "enum": ["fatal", "error", "warning", "info", "debug"] },
+    "contextLines": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "type": "string", "maxLength": 300 }
+    },
+    "stringMap": {
+      "type": "object",
+      "propertyNames": { "maxLength": 256 },
+      "additionalProperties": { "type": "string", "maxLength": 8192 }
+    },
+    "frame": {
+      "type": "object",
+      "required": ["filename", "inApp"],
+      "additionalProperties": false,
+      "properties": {
+        "filename": { "type": "string", "minLength": 1 },
+        "function": { "type": "string" },
+        "module": { "type": "string" },
+        "lineno": { "type": "integer", "minimum": 0 },
+        "colno": { "type": "integer", "minimum": 0 },
+        "inApp": { "type": "boolean" },
+        "preContext": { "$ref": "#/$defs/contextLines" },
+        "contextLine": { "type": "string", "maxLength": 300 },
+        "postContext": { "$ref": "#/$defs/contextLines" }
+      }
+    },
+    "exception": {
+      "type": "object",
+      "required": ["type", "value", "stacktrace"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string" },
+        "value": { "type": "string", "maxLength": 8192 },
+        "stacktrace": {
+          "type": "object",
+          "required": ["frames"],
+          "additionalProperties": false,
+          "properties": {
+            "frames": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/frame" } }
+          }
+        },
+        "cause": { "$ref": "#/$defs/exception" }
+      }
+    },
+    "breadcrumb": {
+      "type": "object",
+      "required": ["timestamp", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "type": { "enum": ["default", "http", "log", "query", "navigation"] },
+        "category": { "type": "string" },
+        "message": { "type": "string" },
+        "level": { "$ref": "#/$defs/level" },
+        "data": { "type": "object" }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["eventId", "timestamp", "level", "platform", "sdk"],
+      "additionalProperties": false,
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "level": { "$ref": "#/$defs/level" },
+        "platform": { "const": "go" },
+        "environment": { "type": "string" },
+        "release": { "type": "string" },
+        "serverName": { "type": "string" },
+        "message": { "type": "string", "maxLength": 8192 },
+        "exception": { "$ref": "#/$defs/exception" },
+        "fingerprint": { "type": "array", "items": { "type": "string" } },
+        "tags": {
+          "type": "object",
+          "maxProperties": 50,
+          "propertyNames": { "maxLength": 32 },
+          "additionalProperties": { "type": "string", "maxLength": 200 }
+        },
+        "user": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "email": { "type": "string" },
+            "username": { "type": "string" },
+            "ipAddress": { "type": "string" }
+          }
+        },
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string" },
+            "url": { "type": "string" },
+            "headers": { "$ref": "#/$defs/stringMap" },
+            "query": { "$ref": "#/$defs/stringMap" }
+          }
+        },
+        "contexts": {
+          "type": "object",
+          "properties": {
+            "runtime": {
+              "type": "object",
+              "required": ["name", "version"],
+              "additionalProperties": false,
+              "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+            },
+            "os": {
+              "type": "object",
+              "required": ["name"],
+              "additionalProperties": false,
+              "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+            }
+          }
+        },
+        "breadcrumbs": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/breadcrumb" } },
+        "extra": { "type": "object" },
+        "sdk": {
+          "type": "object",
+          "required": ["name", "version"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "const": "faultline-go" },
+            "version": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}
