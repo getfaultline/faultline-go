@@ -35,7 +35,3 @@ require (
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-// Local development against the core module in the parent directory. Consumers resolve the
-// tagged core release instead (replace directives in dependencies are ignored).
-replace github.com/getfaultline/faultline-go => ../
