@@ -187,7 +187,7 @@ Go has no goroutine-local storage, so there are two kinds of scope:
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `APIKey` | `string` | **required** | Public ingest key (`flt_ingest_...`), sent as `X-Faultline-Key`. |
-| `Endpoint` | `string` | `https://www.faultsline.dev` | Base URL of the Faultline server. Override it when self-hosting. |
+| `Endpoint` | `string` | `https://api.faultsline.dev` | Base URL of the Faultline server. Override it when self-hosting. |
 | `Environment` | `string` | - | e.g. `production`, `staging`. |
 | `Release` | `string` | - | e.g. `api@1.4.2` or a git sha. |
 | `ServerName` | `string` | `os.Hostname()` | Reported as `serverName`. |

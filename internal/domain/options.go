@@ -9,7 +9,7 @@ import (
 )
 
 // DefaultEndpoint is the hosted Faultline server.
-const DefaultEndpoint = "https://www.faultsline.dev"
+const DefaultEndpoint = "https://api.faultsline.dev"
 
 // IngestPath is appended to the endpoint.
 const IngestPath = "/api/v1/ingest/events"

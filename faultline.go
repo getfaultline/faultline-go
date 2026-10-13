@@ -35,7 +35,7 @@ import (
 )
 
 // SDKVersion is the version reported in event.sdk.version.
-const SDKVersion = "0.1.0"
+const SDKVersion = "0.1.1"
 
 // DefaultEndpoint is the hosted Faultline server.
 const DefaultEndpoint = domain.DefaultEndpoint
@@ -47,7 +47,7 @@ var ErrInvalidOptions = errors.New("invalid options")
 type Options struct {
 	// APIKey is the public ingest key (flt_ingest_...). Required unless Enabled is false.
 	APIKey string
-	// Endpoint is the base URL of the Faultline server (default https://www.faultsline.dev).
+	// Endpoint is the base URL of the Faultline server (default https://api.faultsline.dev).
 	// Events are posted to {Endpoint}/api/v1/ingest/events.
 	Endpoint string
 	// Environment, e.g. "production" or "staging".
